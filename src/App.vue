@@ -1,25 +1,28 @@
-<script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-
-import { useCounterStore } from '@/stores/counter'
-
-const movieStore = useCounterStore()
-</script>
 <template>
-  <header>
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <a class="waves-effect waves-light btn">button</a><br />
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <component :is="tab">
+    <RouterView />
+  </component>
 </template>
 
-<style></style>
+<script setup lang="ts">
+import { watch, computed, markRaw, ref } from 'vue'
+import { useRoute } from 'vue-router'
+import { useCounterStore } from '@/stores/counter'
+
+import EmptyLayout from '@/layouts/EmptyLayout.vue'
+import MainLayout from '@/layouts/MainLayout.vue'
+
+const movieStore = useCounterStore()
+
+const route = useRoute()
+const tab = ref(null)
+const routerMeta: any = computed(() => route.meta?.layout)
+
+watch(
+  () => routerMeta.value as string | undefined,
+  async () => {
+    tab.value = markRaw(routerMeta.value === 'main' ? MainLayout : EmptyLayout)
+  },
+  { immediate: true }
+)
+</script>
