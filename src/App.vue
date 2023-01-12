@@ -12,6 +12,7 @@ const movieStore = useCounterStore()
       <HelloWorld msg="You did it!" />
 
       <nav>
+        <a class="waves-effect waves-light btn">button</a><br />
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav>
