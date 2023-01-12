@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
-</script>
 
+import { useCounterStore } from '@/stores/counter'
+
+const movieStore = useCounterStore()
+</script>
 <template>
   <header>
     <div class="wrapper">
