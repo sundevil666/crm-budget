@@ -14,6 +14,7 @@
             class="dropdown-trigger black-text"
             href="#"
             data-target="dropdown"
+            ref="dropdown"
           >
             USER NAME
             <i class="material-icons right">arrow_drop_down</i>
@@ -21,13 +22,13 @@
 
           <ul id="dropdown" class="dropdown-content">
             <li>
-              <a href="#" class="black-text">
+              <router-link :to="{ name: 'profile' }" class="black-text">
                 <i class="material-icons">account_circle</i>Профиль
-              </a>
+              </router-link>
             </li>
             <li class="divider" tabindex="-1"></li>
             <li>
-              <a href="#" class="black-text">
+              <a href="#" @click.prevent="logout" class="black-text">
                 <i class="material-icons">assignment_return</i>Выйти
               </a>
             </li>
@@ -39,11 +40,27 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+
 const emit = defineEmits<{
   (e: 'onClick'): void
 }>()
 
 const onClick = () => {
   emit('onClick')
+}
+
+const dropdown = ref<object | null>(null)
+const router = useRouter()
+
+onMounted(() => {
+  M.Dropdown.init(dropdown.value, {
+    constrainWidth: true,
+  })
+})
+const logout = (): void => {
+  console.log('logout')
+  router.push('/login?message=logout')
 }
 </script>

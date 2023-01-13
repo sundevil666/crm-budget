@@ -15,7 +15,6 @@ import MainLayout from '@/layouts/MainLayout.vue'
 const movieStore = useCounterStore()
 
 const route = useRoute()
-// const tab = ref<string | null>(null)
 
 const layout = computed(() =>
   route.meta?.layout === 'main' ? MainLayout : EmptyLayout
