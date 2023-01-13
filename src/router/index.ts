@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,12 +7,7 @@ const router = createRouter({
       path: '/',
       name: 'home',
       meta: { layout: 'main' },
-      component: HomeView,
-    },
-    {
-      path: '/about',
-      name: 'about',
-      component: () => import('../views/AboutView.vue'),
+      component: () => import('../views/HomeView.vue'),
     },
     {
       path: '/login',
@@ -22,10 +16,46 @@ const router = createRouter({
       component: () => import('../views/LoginView.vue'),
     },
     {
+      path: '/register',
+      name: 'register',
+      meta: { layout: 'empty' },
+      component: () => import('../views/RegisterView.vue'),
+    },
+    {
       path: '/categories',
       name: 'categories',
       meta: { layout: 'main' },
       component: () => import('../views/CategoriesView.vue'),
+    },
+    {
+      path: '/details-record',
+      name: 'details-record',
+      meta: { layout: 'main' },
+      component: () => import('../views/DetailRecordView.vue'),
+    },
+    {
+      path: '/history',
+      name: 'history',
+      meta: { layout: 'main' },
+      component: () => import('../views/HistoryView.vue'),
+    },
+    {
+      path: '/planning',
+      name: 'planning',
+      meta: { layout: 'main' },
+      component: () => import('../views/PlanningView.vue'),
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      meta: { layout: 'main' },
+      component: () => import('../views/ProfileView.vue'),
+    },
+    {
+      path: '/record',
+      name: 'record',
+      meta: { layout: 'main' },
+      component: () => import('../views/RecordView.vue'),
     },
   ],
 })

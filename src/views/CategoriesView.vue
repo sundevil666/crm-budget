@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="categories-page">
     <div class="page-title">
       <h3>Категории</h3>
     </div>
@@ -72,5 +72,3 @@
 <script>
 export default {}
 </script>
-
-<style></style>

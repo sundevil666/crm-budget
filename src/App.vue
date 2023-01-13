@@ -1,11 +1,11 @@
 <template>
-  <component :is="tab">
+  <component :is="layout">
     <RouterView />
   </component>
 </template>
 
 <script setup lang="ts">
-import { watch, computed, markRaw, ref } from 'vue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useCounterStore } from '@/stores/counter'
 
@@ -15,14 +15,9 @@ import MainLayout from '@/layouts/MainLayout.vue'
 const movieStore = useCounterStore()
 
 const route = useRoute()
-const tab = ref(null)
-const routerMeta: any = computed(() => route.meta?.layout)
+// const tab = ref<string | null>(null)
 
-watch(
-  () => routerMeta.value as string | undefined,
-  async () => {
-    tab.value = markRaw(routerMeta.value === 'main' ? MainLayout : EmptyLayout)
-  },
-  { immediate: true }
+const layout = computed(() =>
+  route.meta?.layout === 'main' ? MainLayout : EmptyLayout
 )
 </script>
