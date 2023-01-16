@@ -5,7 +5,9 @@
         <a href="#" @click.prevent="onClick">
           <i class="material-icons black-text">dehaze</i>
         </a>
-        <span class="black-text">12.12.12</span>
+        <span class="black-text">
+          {{ dateFilter(date, 'datetime') }}
+        </span>
       </div>
 
       <ul class="right hide-on-small-and-down">
@@ -14,7 +16,7 @@
             class="dropdown-trigger black-text"
             href="#"
             data-target="dropdown"
-            ref="dropdown"
+            ref="dropdownElement"
           >
             USER NAME
             <i class="material-icons right">arrow_drop_down</i>
@@ -40,8 +42,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
+import dateFilter from '@/helper/dateFilter'
 
 const emit = defineEmits<{
   (e: 'onClick'): void
@@ -51,13 +54,26 @@ const onClick = () => {
   emit('onClick')
 }
 
+const dropdownElement = ref<object | null>(null)
 const dropdown = ref<object | null>(null)
 const router = useRouter()
+const date = ref<Date>(new Date())
+const interval = ref<undefined | number>()
 
 onMounted(() => {
-  M.Dropdown.init(dropdown.value, {
+  // eslint-disable-next-line no-undef
+  dropdown.value = M.Dropdown.init(dropdownElement.value, {
     constrainWidth: true,
   })
+  interval.value = setInterval(() => {
+    date.value = new Date()
+  }, 1000)
+})
+onUnmounted(() => {
+  if (dropdown.value && dropdown.value.destroy) {
+    dropdown.value.destroy()
+  }
+  clearInterval(interval.value)
 })
 const logout = (): void => {
   console.log('logout')
