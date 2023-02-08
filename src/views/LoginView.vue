@@ -58,9 +58,12 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
+import { inject } from 'vue'
+import messages from '@/utils/message/messages'
 
 const router = useRouter()
+const route = useRoute()
 
 const emailElement = ref<HTMLInputElement | null>(null)
 const passwordElement = ref<HTMLInputElement | null>(null)
@@ -72,8 +75,13 @@ const minLength = ref<number>(6)
 
 const EMPTY_INPUT = 'Поле не должно быть пустым'
 
+const $message: any = inject('$message')
+
 onMounted(() => {
   emailElement.value?.focus()
+  if (messages[route.query.message]) {
+    $message(messages[route.query.message])
+  }
 })
 const submitHandler = (): void => {
   onValidation('email')

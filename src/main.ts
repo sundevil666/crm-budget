@@ -8,9 +8,11 @@ import 'materialize-css/dist/css/materialize.min.css'
 import 'materialize-css/dist/js/materialize.min'
 
 import './assets/main.styl'
+import { myPlugin } from '@/utils/message/messages-plugin'
 
 const app = createApp(App)
 
+app.use(myPlugin)
 app.use(createPinia())
 app.use(router)
 
