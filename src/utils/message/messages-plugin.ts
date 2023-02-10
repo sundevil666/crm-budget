@@ -1,4 +1,4 @@
-export const myPlugin = {
+export const messagePlugin = {
   install(app: any) {
     const $message: Object = (html: string): void => {
       // @ts-ignore
