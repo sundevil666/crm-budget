@@ -10,6 +10,12 @@ const router = createRouter({
       component: () => import('../views/HomeView.vue'),
     },
     {
+      path: '/english',
+      name: 'english',
+      meta: { layout: 'main' },
+      component: () => import('../views/EnglishView.vue'),
+    },
+    {
       path: '/login',
       name: 'login',
       meta: { layout: 'empty' },

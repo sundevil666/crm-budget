@@ -31,6 +31,7 @@ const navList: INavItem[] = [
   { id: 3, title: 'Планирование', nameUrl: 'planning' },
   { id: 4, title: 'Новая запись', nameUrl: 'record' },
   { id: 5, title: 'Категории', nameUrl: 'categories' },
+  { id: 6, title: 'English', nameUrl: 'english' },
 ]
 
 const isOpenSB = ref<boolean>(true)
