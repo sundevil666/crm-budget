@@ -15,7 +15,7 @@ module.exports = {
   "rules": {
     // enable additional rules
     "indent": ["error", 2],
-    "quotes": ["error", "single"],
+    "quotes": ["error", "single", { "avoidEscape": true, "allowTemplateLiterals": true }],
     "semi": ["error", "never"],
 
     // override configuration set by extending "eslint:recommended"
