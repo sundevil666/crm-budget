@@ -1,29 +1,33 @@
 <template>
-  <div class="row">
+  <div class="row english-view">
     <div class="col s8 offset-s2">
-      <div class="card-container">
-        <div
-          class="card-word center pointer"
-          :class="{ 'show-back': isShowBack }"
-          @click="switchAround"
-        >
-          <div class="card-front">
-            <p>{{ iKnow }}</p>
-            <h1>{{ lexicon[selectedWord].word }}</h1>
-            <div>{{ lexicon[selectedWord].sound }}</div>
+      <div class="card-container" style="display: flex">
+        <transition name="card-animation">
+          <div
+            :key="selectedWord"
+            class="card-word center pointer"
+            style="width: 100%"
+            :class="{ 'show-back': isShowBack }"
+            @click="switchAround"
+          >
+            <div class="card-front">
+              <p>{{ iKnow }}</p>
+              <h1>{{ lexicon[selectedWord].word }}</h1>
+              <div>{{ lexicon[selectedWord].sound }}</div>
+            </div>
+            <div class="card-back">
+              <p>{{ iDidKnow }}</p>
+              <h1>{{ lexicon[selectedWord].transcription }}</h1>
+              <div>{{ lexicon[selectedWord].sound }}</div>
+              <h2 class="text-primary">{{ lexicon[selectedWord].reading }}</h2>
+            </div>
           </div>
-          <div class="card-back">
-            <p>{{ iDidKnow }}</p>
-            <h1>{{ lexicon[selectedWord].transcription }}</h1>
-            <div>{{ lexicon[selectedWord].sound }}</div>
-            <h2 class="text-primary">{{ lexicon[selectedWord].reading }}</h2>
-          </div>
-        </div>
+        </transition>
       </div>
     </div>
   </div>
   <div class="row center">
-    <div class="col s2 offset-s3 pointer">know</div>
+    <div class="col s2 offset-s3 pointer" @click="nextCard">know</div>
     <div class="col s2 pointer"><b>count word:</b> {{ lexicon.length }}</div>
     <div class="col s2 pointer">don't know</div>
   </div>
@@ -56,9 +60,34 @@ const iDidKnow = ref<string>("I didn't know this word")
 const switchAround = (): void => {
   isShowBack.value = !isShowBack.value
 }
+const nextCard = (): void => {
+  isShowBack.value = false
+  if (selectedWord.value < lexicon.length - 1) {
+    selectedWord.value = selectedWord.value + 1
+  } else {
+    selectedWord.value = 0
+  }
+}
 </script>
 
 <style>
+.card-animation-enter-active,
+.card-animation-leave-active {
+  transition: transform 0.5s, opacity 0.5s;
+
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.card-animation-enter,
+.card-animation-leave-to {
+  transform: translateX(100%);
+  position: absolute;
+  opacity: 1;
+}
+.english-view {
+  overflow: hidden;
+}
 .card-container {
   perspective: 1000px;
 }
