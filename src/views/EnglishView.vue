@@ -1,4 +1,16 @@
 <template>
+  <div class="row center">
+    <div class="col s2 pointer" @click="prevCard">
+      <i class="material-icons">arrow_back</i>
+    </div>
+    <div class="col s2 offset-s3">
+      <strong>id:</strong> {{ selectedWord }} <strong>total:</strong>
+      {{ words.length }}
+    </div>
+    <div class="col s2 offset-s3 pointer" @click="nextCard">
+      <i class="material-icons">arrow_forward</i>
+    </div>
+  </div>
   <div class="row english-view">
     <div class="col s8 offset-s2">
       <div class="card-container" style="display: flex">
@@ -6,20 +18,20 @@
           <div
             :key="selectedWord"
             class="card-word center pointer"
-            style="width: 100%"
+            style="width: 100%; min-height: 250px"
             :class="{ 'show-back': isShowBack }"
             @click="switchAround"
           >
             <div class="card-front">
-              <p>{{ iKnow }}</p>
-              <h1>{{ lexicon[selectedWord].word }}</h1>
-              <div>{{ lexicon[selectedWord].sound }}</div>
+              <h1>{{ getWord[selectedWord].word }}</h1>
+              <div>{{ getWord[selectedWord].transcription }}</div>
+              <div>{{ getWord[selectedWord].sound }}</div>
             </div>
             <div class="card-back">
-              <p>{{ iDidKnow }}</p>
-              <h1>{{ lexicon[selectedWord].transcription }}</h1>
-              <div>{{ lexicon[selectedWord].sound }}</div>
-              <h2 class="text-primary">{{ lexicon[selectedWord].reading }}</h2>
+              <h1>{{ getWord[selectedWord].translate }}</h1>
+              <div>{{ getWord[selectedWord].transcription }}</div>
+              <div>{{ getWord[selectedWord].sound }}</div>
+              <h2 class="text-primary">{{ getWord[selectedWord].reading }}</h2>
             </div>
           </div>
         </transition>
@@ -27,45 +39,98 @@
     </div>
   </div>
   <div class="row center">
-    <div class="col s2 offset-s3 pointer" @click="nextCard">know</div>
-    <div class="col s2 pointer"><b>count word:</b> {{ lexicon.length }}</div>
-    <div class="col s2 pointer">don't know</div>
+    <div
+      class="col s2 pointer"
+      @click="addIKnowItem(getWord[selectedWord].transcription)"
+    >
+      {{ iKnow }} {{ listIKnow.length }}
+    </div>
+    <div class="col s2 offset-s3 center">
+      <b>Count word:</b> {{ getWord.length }}
+    </div>
+
+    <div
+      class="col s2 offset-s3 pointer"
+      @click="addIDidNotKnowItem(getWord[selectedWord].transcription)"
+    >
+      {{ iDidNotKnow }} {{ listIDidNotKnow.length }}
+    </div>
   </div>
+  <ul v-if="showList.length > 0">
+    <li
+      class="row card show-list"
+      v-for="(item, i) in showList"
+      :key="item.transcription"
+      :class="{
+        active: item.transcription === showList[selectedWord].transcription,
+      }"
+    >
+      <div class="col s1"># {{ i }}</div>
+      <div class="col s5">{{ item.word }}</div>
+      <div class="col s6">{{ item.translate }}</div>
+    </li>
+  </ul>
 </template>
 
 <script setup lang="ts">
-const lexicon = [
-  {
-    id: 1,
-    word: 'hi',
-    transcription: '[haɪ]',
-    reading: 'хай',
-    sound: 'sound hi',
-  },
-  {
-    id: 2,
-    word: 'hello',
-    transcription: `['he'ləu]`,
-    reading: 'хэлоу',
-    sound: 'sound хэлон',
-  },
-]
-import { ref } from 'vue'
+import { ref, reactive, onBeforeMount } from 'vue'
+import words from '@/moc/words'
+import { getStore, setStore, removeItemStore } from '@/helper/store'
+import type { Word } from '@/types/IWord'
 
 const isShowBack = ref<Boolean>(false)
 const selectedWord = ref<Number>(0)
-const iKnow = ref<string>('I know this word')
-const iDidKnow = ref<string>("I didn't know this word")
+const iKnow = ref<string>('I know')
+const iDidNotKnow = ref<string>("I didn't know")
+
+const getWord = ref<Array<Word>>(words)
+const showList = ref<Array<Word>>([])
+const listIKnow: Array<string> = reactive([])
+const listIDidNotKnow: Array<string> = reactive([])
+
+onBeforeMount(() => {
+  showWordsList('main')
+})
+const showWordsList = (list: string): void => {
+  if (list === 'main') {
+    showList.value = getWord.value
+  }
+}
+const setHideBack = (): void => {
+  isShowBack.value = false
+}
+const addIKnowItem = (transcription: string): void => {
+  if (!listIKnow.includes(transcription)) {
+    setHideBack()
+    listIKnow.push(transcription)
+    nextCard()
+  }
+}
+const addIDidNotKnowItem = (transcription: string): void => {
+  if (!listIDidNotKnow.includes(transcription)) {
+    setHideBack()
+    listIDidNotKnow.push(transcription)
+    nextCard()
+  }
+}
 
 const switchAround = (): void => {
   isShowBack.value = !isShowBack.value
 }
+
+const toggleCart = (val: number): void => {
+  selectedWord.value = Number(selectedWord.value) + val
+}
 const nextCard = (): void => {
-  isShowBack.value = false
-  if (selectedWord.value < lexicon.length - 1) {
-    selectedWord.value = selectedWord.value + 1
-  } else {
-    selectedWord.value = 0
+  if (selectedWord.value < words.length - 1) {
+    setHideBack()
+    toggleCart(1)
+  }
+}
+const prevCard = (): void => {
+  if (selectedWord.value >= 1) {
+    setHideBack()
+    toggleCart(-1)
   }
 }
 </script>
@@ -85,16 +150,21 @@ const nextCard = (): void => {
   position: absolute;
   opacity: 1;
 }
+.show-list.active {
+  background-color: pink;
+}
 .english-view {
-  overflow: hidden;
+  min-height: 250px;
 }
 .card-container {
   perspective: 1000px;
+  width: 100%;
 }
 
 .card-word {
   transform-style: preserve-3d;
   transition: transform 0.5s;
+  position: relative;
 }
 
 .card-word.show-back {
@@ -111,7 +181,6 @@ const nextCard = (): void => {
 
 .card-front {
   background-color: #f1c40f;
-
   position: absolute;
   top: 0;
   left: 0;
